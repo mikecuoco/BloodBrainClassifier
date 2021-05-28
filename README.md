@@ -10,7 +10,7 @@ Clone this repository and then download the required data.
 ```
 git clone https://github.com/mikecuoco/BloodBrainClassifier && \
 cd BloodBrainClassifier && \
-./get_data.sh
+scripts/get_data.sh
 ```
 
 
