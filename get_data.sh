@@ -1,5 +1,4 @@
-# Downlaod data 
+#!/usr/bin/env sh
 
-curl https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSE136243&format=file&file=GSE136243%5Fgene%5FTPM%5Fall%5Fsamples%2Etxt%2Egz > GSE136243.txt.gz
-gunzip GSE136243.txt.gz
-
+# Downlaod data
+curl --output data/GSE136243.txt.gz ftp.ncbi.nlm.nih.gov/geo/series/GSE136nnn/GSE136243/suppl/GSE136243_gene_TPM_all_samples.txt.gz

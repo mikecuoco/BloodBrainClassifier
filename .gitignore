@@ -3,4 +3,6 @@
 .RData
 .Ruserdata
 *.Rproj
-data/*txt
+
+data/*
+!data/CSE136342_donors.csv
