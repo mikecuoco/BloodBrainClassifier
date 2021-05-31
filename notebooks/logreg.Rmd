@@ -1,0 +1,87 @@
+---
+title: "Logistic Regression"
+author: "Mike Cuoco"
+date: "5/30/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r load packages}
+library(tidyverse, quietly = T)
+theme_set(theme_minimal()) # ggplot theme
+library(janitor)
+library(here)
+library(glue)
+library(reticulate)
+use_condaenv("BloodBrainClassifier", required = T)
+```
+
+
+# Logistic Regression
+
+```{python, echo=FALSE}
+# load data from starter script
+import scripts.starter as data
+
+# load LogisticRegression from sklearn
+from sklearn.linear_model import LogisticRegression
+
+# use max_iter=1000, it doesn't converge after 100 iterations
+clf = LogisticRegression(penalty = 'none', max_iter=1000).fit(data.X_train, data.y_train)
+pred = clf.predict(data.X_test)
+```
+
+# Data exploration
+
+```{r eda}
+# load tpm and metadata
+donors = read_csv(here("data/GSE136243_donors.csv"), col_types = cols()) %>%
+  janitor::clean_names() %>%
+  filter(group %in% c("AD","control"))
+
+data = read_tsv(here("data/GSE136243.txt.gz")) %>%
+  column_to_rownames("gene_id") %>%
+  select(-c("gene_name","gene_biotype")) %>%
+  t() %>%
+  as.data.frame() %>%
+  rownames_to_column("sample_id") %>%
+  mutate(donor_id = substr(sample_id, 1, nchar(sample_id)-5)) %>%
+  filter(donor_id %in% donors$donor_id) %>%
+  select(-donor_id) %>%
+  column_to_rownames("sample_id") %>%
+  as.matrix() %>%
+  t()
+
+# normalize data
+norm = log(data+1) 
+
+# run PCA
+pca = prcomp(norm, scale = TRUE)
+pca = pca$rotation %>%
+  as.data.frame() %>%
+  rownames_to_column("donor_id") %>%
+  mutate(donor_id = substr(donor_id, 1, nchar(donor_id)-5)) %>%
+  left_join(donors, by = "donor_id")
+
+# plot
+pca %>% 
+  select(matches(glue("PC{1:9}$")), group) %>% 
+  ggpairs(aes(color = group), columns = 1:9, 
+          lower = list(continuous = NULL), 
+          upper = list(continuous = "points"), 
+          diag = list(continuous = NULL),
+          progress = FALSE)
+```
+
+
+
+```{r evaluate}
+library(caret)
+
+confusionMatrix(as.factor(py$pred),as.factor(unname(py$data$y_test)))
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
