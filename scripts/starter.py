@@ -21,6 +21,7 @@
 # the values of X, y, X_train, X_test, y_train, y_test
 
 import pandas as pd
+from functools import reduce
 from sklearn.model_selection import train_test_split
 
 # load data
@@ -38,12 +39,27 @@ tpm.index.name = 'sample'
 # C: converter
 tpm['group'] = tpm.index.str.split('_').str[0]
 
-# remove converters from the dataset
-data = tpm[tpm['group'] != 'C']
+# extract sample info from the sample IDs
+# supplementary table S3 is too difficult to parse into a table from a PDF :(
+samples = pd.DataFrame(tpm.index)
+samples['donor'] = samples['sample'].str.rsplit('_', 2).str[0]
+samples['year'] = 2000 + samples['sample'].str.split('_').str[2].astype('int')
+samples['group'] = samples['sample'].str.split('_').str[0]
+samples = samples.join(donors[donors['Group'] == 'converter']['Year diagnosis'].astype('int'), on='donor')
+samples.set_index('sample', inplace=True)
+
+# subset to only the AD samples
+# if True, this will include samples from converters after their diagnosis
+if True:
+    data = tpm[(samples['year'] > samples['Year diagnosis']) | (tpm['group'] != 'C')]
+else:
+    # remove samples coming from converters before their 
+    data = tpm[tpm['group'] != 'C']
+
 # ignore pesky warnings for the following line
 pd.options.mode.chained_assignment = None  # (the default='warn')
 # convert to boolean
-data['group'].replace({'AD': 1, 'N': 0}, inplace=True)
+data['group'].replace({'AD': 1, 'N': 0, 'C': 1}, inplace=True)
 
 # define this code as a function so it can be called from outside the module, if needed
 # note that calling this function will change the values of X_train, X_test, y_train,
