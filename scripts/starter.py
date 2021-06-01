@@ -64,7 +64,7 @@ data['group'].replace({'AD': 1, 'N': 0, 'C': 1}, inplace=True)
 # define this code as a function so it can be called from outside the module, if needed
 # note that calling this function will change the values of X_train, X_test, y_train,
 # and y_test globally!
-def split(test_size=0.33, random_state=42):
+def split(test_size=0.25, random_state=42):
     ''' create a test/train split '''
     global data, X, y, X_train, X_test, y_train, y_test
     X = data.loc[:, data.columns != 'group']
