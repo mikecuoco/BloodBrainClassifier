@@ -9,6 +9,7 @@
 # tpm - A gene expression matrix for AD, N, and C patients (rows = samples, columns = genes)
 # donors - Info about each individual in the study
 # genes - Info about each gene in the tpm matrix
+# samples - Info about each sample in the tpm matrix
 # data - The TPM matrix subsetted to AD and N patients. The last column will contain each patient's status as AD or N
 # X - the data matrix, but without its last column
 # y - the last column of the data matrix
@@ -21,7 +22,6 @@
 # the values of X, y, X_train, X_test, y_train, y_test
 
 import pandas as pd
-from functools import reduce
 from sklearn.model_selection import train_test_split
 
 # load data
@@ -64,7 +64,7 @@ data['group'].replace({'AD': 1, 'N': 0, 'C': 1}, inplace=True)
 # define this code as a function so it can be called from outside the module, if needed
 # note that calling this function will change the values of X_train, X_test, y_train,
 # and y_test globally!
-def split(test_size=0.33, random_state=42):
+def split(test_size=0.25, random_state=42):
     ''' create a test/train split '''
     global data, X, y, X_train, X_test, y_train, y_test
     X = data.loc[:, data.columns != 'group']
