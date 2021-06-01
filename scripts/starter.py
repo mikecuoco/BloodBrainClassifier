@@ -9,6 +9,7 @@
 # tpm - A gene expression matrix for AD, N, and C patients (rows = samples, columns = genes)
 # donors - Info about each individual in the study
 # genes - Info about each gene in the tpm matrix
+# samples - Info about each sample in the tpm matrix
 # data - The TPM matrix subsetted to AD and N patients. The last column will contain each patient's status as AD or N
 # X - the data matrix, but without its last column
 # y - the last column of the data matrix
@@ -21,7 +22,6 @@
 # the values of X, y, X_train, X_test, y_train, y_test
 
 import pandas as pd
-from functools import reduce
 from sklearn.model_selection import train_test_split
 
 # load data
