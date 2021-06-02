@@ -6,9 +6,16 @@ suppressPackageStartupMessages(library(DESeq2)) # differential expression
 
 #' select DE genes from an RNA-seq count matrix
 #' 
-#' @param count.matrix a samples by genes matrix of non-negative numbers
-#' @param conditions a vector of sample labels for each row in count.matrix
-#' @return DE genes with adjusted p-value < 0.05
+#' @param number of DE genes to keep (optional; defaults to 195)
+#' @return top n DE genes with highest adjusted p-value
+
+args <- commandArgs(trailingOnly = TRUE)
+if (length(args)==0) {
+  top_n = 195 # genes with p-values less than 0.05
+} else if (length(args)==1) {
+  # default output file
+  top_n = strtoi(args[1])
+}
 
 # load training data
 start = import(module = "scripts.starter", as = "data")
@@ -28,7 +35,7 @@ dds = DESeq(dds)
 res = results(dds)
 
 # return DE genes
-de.genes = as.vector(na.omit(rownames(res)[res$padj < 0.05]))
-# start$data = start$data[,c(de.genes,"group")]
+de.genes = as.vector(na.omit(rownames(res)[res$padj < 0.05])) # get genes with p-value less than 0.05, only
+de.genes = as.vector(rownames(head(res[order(res$padj),], top_n)))
 cat(de.genes,sep=",")
 
