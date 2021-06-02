@@ -1,5 +1,6 @@
-from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report
 from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import train_test_split
 
 # model = sklearn.svm.SVC()
 # tuned_parameters = [{'kernel': ['poly'], 'gamma': [1e-7, 1e-8, 1e-10], 'C': [1, 0.000001], 'degree':[5, 6, 7, 8, 9]},
