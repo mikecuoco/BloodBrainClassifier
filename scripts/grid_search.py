@@ -20,7 +20,7 @@ def main(data, model, tuned_parameters, score = 'f1', k=4):
     print()
 
     clf = GridSearchCV(
-        SVC(), tuned_parameters, scoring='%s_macro' % score, cv=k
+        model, tuned_parameters, scoring='%s_macro' % score, cv=k
     )
     clf.fit(X_train, y_train)
 
