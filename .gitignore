@@ -6,6 +6,7 @@
 
 data/*
 !data/CSE136342_donors.csv
+!data/ranked_genes.tsv
 
 __pycache__
 .ipynb_checkpoints
