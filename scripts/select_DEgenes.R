@@ -25,11 +25,12 @@ if (length(args)==0) {
 # load training data
 start = import(module = "scripts.starter", as = "data")
 count.matrix = start$X_train
+count.matrix = count.matrix[,colSums(count.matrix) > 0]
 conditions = start$y_train
 
 if (method == "Ttest"){
-  count.matrix = count.matrix %>% as.data.frame()
   # perform t-test on each gene
+  count.matrix = count.matrix %>% as.data.frame() 
   test = map_df(count.matrix, function(.x){
     case = .x[conditions==1]
     control= .x[conditions==0]
