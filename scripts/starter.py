@@ -51,7 +51,7 @@ samples.set_index('sample', inplace=True)
 # subset to only the AD samples
 # if True, this will include samples from converters after their diagnosis
 if True:
-    data = tpm[(samples['year'] > samples['Year diagnosis']) | (tpm['group'] != 'C')]
+    data = tpm[(samples['year'] >= samples['Year diagnosis']) | (tpm['group'] != 'C')]
 else:
     # remove samples coming from converters before their 
     data = tpm[tpm['group'] != 'C']
