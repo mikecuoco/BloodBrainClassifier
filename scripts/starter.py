@@ -53,7 +53,7 @@ samples.set_index('sample', inplace=True)
 if True:
     data = tpm[(samples['year'] >= samples['Year diagnosis']) | (tpm['group'] != 'C')]
 else:
-    # remove samples coming from converters before their 
+    # remove all converter samples
     data = tpm[tpm['group'] != 'C']
 
 # ignore pesky warnings for the following line
