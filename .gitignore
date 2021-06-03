@@ -3,7 +3,7 @@
 .RData
 .Ruserdata
 *.Rproj
-
+*.png
 data/*
 !data/CSE136342_donors.csv
 !data/ranked_genes.tsv
